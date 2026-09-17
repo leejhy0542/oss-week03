@@ -22,6 +22,7 @@
 //
 // 커밋 메시지: p3: forecast cli  /  p6: cache and offline
 import fs from "node:fs/promises";
+import chalk from "chalk";
 import { geocode, forecast, fetchForecastRaw, parseForecast } from "./p3_weather.js";
 import { describe } from "./wmo.js";
 import { json } from "node:stream/consumers";
@@ -37,6 +38,13 @@ function label(date) {                       // "2026-09-17" → "Thu 09-17"
   return `${WEEKDAY[new Date(date).getUTCDay()]} ${date.slice(5)}`;
 }
 
+function paintMax(max){
+  const s = max.toFixed(1);
+  if(max>=30) return chalk.red(s);
+  if(max < 10) return chalk.blue(s);
+  
+  return s;
+}
 try {
   let place, raw;
 
@@ -59,10 +67,10 @@ try {
   //   1. `${place.name}, ${place.country} (${lat}, ${lon})`    lat/lon 은 toFixed(2)
   //   2. `Now: ${temp.toFixed(1)}${unit}, ${describe(code)}`
   //   3. 날마다: `${label(date)}  min ${min}  max ${max}  ${describe(code)}`    min/max 는 toFixed(1)
-  console.log(`${place.name}, ${place.country} (${place.latitude.toFixed(2)}, ${place.longitude.toFixed(2)})`);
+  console.log(`${chalk.bold(place.name)}, ${place.country} (${place.latitude.toFixed(2)}, ${place.longitude.toFixed(2)})`);
   console.log(`Now: ${fc.now.temp}${fc.now.unit}, ${describe(fc.now.code)}`);
   for(const day of fc.days){
-    console.log(`${label(day.date)} min ${day.min} max ${day.max} ${describe(day.code)}`);
+    console.log(`${label(day.date)} min ${day.min} max ${paintMax(day.max)} ${describe(day.code)}`);
   }
   // TODO (P6): --save, --offline (README 참고)
   if(flags.includes("--save")){

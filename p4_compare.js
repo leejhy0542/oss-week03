@@ -30,7 +30,7 @@
 //   시간이 진짜 줄었는지: time node p4_compare.js Seoul Busan Jeju 를 루프 안 await 버전과 비교해 보면 안다.
 //
 // 커밋 메시지: p4: compare cities
-
+import chalk from "chalk";
 import { geocode, forecast } from "./p3_weather.js";
 
 const names = process.argv.slice(2);
@@ -73,7 +73,9 @@ for (let i = 0; i < results.length; i++) {
 successes.sort((a, b) => b.max - a.max);
 
 successes.forEach((item, index) => {
-  console.log(`${index + 1}. ${item.city.padEnd(8)} ${item.max.toFixed(1)}`);
+  const s = item.max.toFixed(1);
+  const max = item.max >= 30 ? chalk.red(s) : item.max < 10 ? chalk.blue(s) : s;
+  console.log(`${index + 1}. ${chalk.bold(item.city.padEnd(8))} ${max}`);
 });
 
 failures.forEach((item) => {
