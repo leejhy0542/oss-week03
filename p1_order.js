@@ -41,7 +41,9 @@ sleep(10).then(() => console.log("F"));
 
 console.log("G");
 
-// prediction:
-// actual:
-// why I was wrong (one line per miss):
-//
+// prediction: ADEFGCB
+// actual: ADGCFEB
+// why I was wrong (one line per miss): E : await때문에 함수가 일시정지되고 함수 밖으로 빠져나오기 때문
+//                                      F : slepp().then 함수로 백그라운드에 등록되기 때문
+//                                      G : 앞의 EF가 백그라운드에 등록 되었기때문에 먼저 출력됨
+//                                      C : 다음 타이머 순서대로 setTimeout이 0인 C가 출력됨
